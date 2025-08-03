@@ -1,7 +1,13 @@
 "use client";
+
 import React, { FC } from "react";
 import Logo from "./Logo";
 import { X } from "lucide-react";
+import { headerData } from "./constants/data";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import SocialMedia from "./SocialMedia";
+import { useOutsideClick } from "@/hooks";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -9,22 +15,44 @@ interface SidebarProps {
 }
 
 const SideMenu: FC<SidebarProps> = ({ isOpen, onClose }) => {
+  const pathname = usePathname();
+  const SidebarRef = useOutsideClick<HTMLDivElement>(onClose);
+
   return (
     <div
-      className={`
-        fixed inset-y-0 left-0 z-50 w-full bg-black/50 text-white shadow-xl 
-        transform transition-transform duration-300 ease-in-out
-        ${isOpen ? "translate-x-0" : "-translate-x-full"}
-      `}
+      className={`fixed inset-0 z-50 w-full bg-black/50 text-white/70 shadow-xl 
+      transform transition-transform duration-300 ease-in-out 
+      ${isOpen ? "translate-x-0" : "-translate-x-full"}`}
     >
-      <div className="min-w-[18rem] max-w-96 bg-black h-screen p-6 border-r border-shop_light_green flex flex-col gap-6 overflow-y-auto">
+      <div
+        ref={SidebarRef}
+        className="min-w-[18rem] max-w-96 bg-black h-full p-6 border-r border-shop_light_green flex flex-col gap-6 overflow-y-auto"
+      >
         <div className="flex items-center justify-between">
-          <Logo className="text-white" />
-          <button onClick={onClose} className="hover:text-shop_light_green transition-colors">
+          <Logo className="text-white" spanDesign="group-hover:text-white" />
+          <button
+            onClick={onClose}
+            className="hover:text-shop_light_green transition-colors"
+          >
             <X />
           </button>
         </div>
-        {/* Add sidebar content here */}
+
+        <div className="flex flex-col space-y-3.5 font-semibold tracking-wide">
+          {headerData.map((item) => (
+            <Link
+              href={item.href}
+              key={item.title}
+              className={`hover:text-shop_light_green hoverEffect ${
+                pathname === item.href ? "text-white" : ""
+              }`}
+            >
+              {item.title}
+            </Link>
+          ))}
+        </div>
+
+        <SocialMedia />
       </div>
     </div>
   );

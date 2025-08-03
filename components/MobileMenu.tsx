@@ -1,7 +1,9 @@
 "use client";
 import { AlignLeft } from "lucide-react";
 import React, { useState } from "react";
-import SideMenu from "./SideMenu";
+import dynamic from "next/dynamic";
+
+const SideMenu = dynamic(() => import("./SideMenu"), { ssr: false });
 
 const MobileMenu = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
