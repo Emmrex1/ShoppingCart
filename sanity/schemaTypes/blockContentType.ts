@@ -1,5 +1,5 @@
+import { ImageIcon } from "lucide-react";
 import { defineType, defineArrayMember } from "sanity";
-import { ImageIcon } from "@sanity/icons";
 
 export const blockContentType = defineType({
   title: "Block Content",

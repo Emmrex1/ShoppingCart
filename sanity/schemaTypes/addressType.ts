@@ -1,4 +1,5 @@
-import { HomeIcon } from "@sanity/icons";
+
+import { HomeIcon } from "lucide-react";
 import { defineField, defineType } from "sanity";
 
 export const addressType = defineType({

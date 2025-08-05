@@ -1,45 +1,7 @@
-// import React from 'react'
-// import Container from './Container';
-// import Logo from './Logo';
-// import HeaderMenu from './HeaderMenu';
-// import Searchbar from './Searchbar';
-// import CartIcon from './CartIcon';
-// import Favouritebutton from './Favouritebutton';
-// import SignIn from './SignIn';
-// import MobileMenu from './MobileMenu';
-// import { currentUser } from '@clerk/nextjs/server';
-// import { ClerkLoaded, SignedIn, UserButton } from '@clerk/nextjs';
-
-// const Header = async () => {
-//   const user = await currentUser()
-//   return (
-//     <header className='bg-white py-5'> 
-//       <Container className='flex justify-between items-center text-lightColor'>
-//        <div className='flex w-auto md:w-1/3 items-center justify-start gap-2.5 md:gap-0 '>
-//          <MobileMenu/>
-//         <Logo/>
-//         </div>
-//         <HeaderMenu/>
-//         <div className='flex w-auto md:w-1/3 items-center justify-end gap-5 '>
-//           <Searchbar/>
-//           <CartIcon/>
-//            <Favouritebutton/>
-//            <ClerkLoaded>
-//             <SignedIn>
-//               <UserButton/>
-//             </SignedIn>
-//           {!user && <SignIn/>}
-//            </ClerkLoaded>   
-//         </div>
-//       </Container>
-//     </header>
-//   )
-// }
-
-// export default Header;
 import React from "react";
 import Container from "./Container";
 import Logo from "./Logo";
+import HeaderMenu from "./HeaderMenu";
 import CartIcon from "./CartIcon";
 import SignIn from "./SignIn";
 import MobileMenu from "./MobileMenu";
@@ -47,10 +9,9 @@ import { auth, currentUser } from "@clerk/nextjs/server";
 import { ClerkLoaded, SignedIn, UserButton } from "@clerk/nextjs";
 import Link from "next/link";
 import { Logs } from "lucide-react";
-import HeaderMenu from "./HeaderMenu";
+// import { getMyOrders } from "@/sanity/queries";
 import Searchbar from "./Searchbar";
 import Favouritebutton from "./Favouritebutton";
-
 
 const Header = async () => {
   const user = await currentUser();
