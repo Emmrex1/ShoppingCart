@@ -8,7 +8,7 @@ const HeaderMenu = () => {
     const pathname = usePathname( )
     // console.log(pathname)
   return (
-    <div className='hidden md:inline-flex w-1/3 items-center gap-7 text-sm capitalize  text-lightColor font-normal '>
+    <div className='hidden md:inline-flex w-1/3 items-center justify-center gap-7 text-sm capitalize  text-lightColor font-normal '>
       {headerData?.map((item ) =>  (
         <Link  key={item?.title} href={item?.href} className={`hover:text-shop_light_green hoverEffect relative group ${pathname ===item?.href && "text-shop_light_green"}`}>
             {item?.title}
