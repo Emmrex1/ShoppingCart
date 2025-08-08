@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import banner1 from "../images/banner1.png";
+import { banner_1 } from "@/images";
 import { Title } from "./ui/text";
 
 const HomeBanner = () => {
@@ -29,7 +29,7 @@ const HomeBanner = () => {
         {/* Image Section: Hidden on Mobile */}
         <div className="hidden md:block w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg">
           <Image
-            src={banner1}
+            src={banner_1}
             alt="Promotional Headphones Banner"
             className="w-full h-auto object-contain"
             priority

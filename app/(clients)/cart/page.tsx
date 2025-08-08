@@ -22,6 +22,16 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
+
 import { Address } from "@/sanity.types";
 import { client } from "@/sanity/lib/client";
 import { urlFor } from "@/sanity/lib/image";
@@ -43,6 +53,7 @@ const CartPage = () => {
     resetCart,
   } = useStore();
   const [loading, setLoading] = useState(false);
+  const [isResetDialogOpen, setIsResetDialogOpen] = useState(false);
   const groupedItems = useStore((state) => state.getGroupedItems());
   const { isSignedIn } = useAuth();
   const { user } = useUser();
@@ -70,14 +81,11 @@ const CartPage = () => {
   useEffect(() => {
     fetchAddresses();
   }, []);
-  const handleResetCart = () => {
-    const confirmed = window.confirm(
-      "Are you sure you want to reset your cart?"
-    );
-    if (confirmed) {
-      resetCart();
-      toast.success("Cart reset successfully!");
-    }
+  
+  const confirmReset = () => {
+    resetCart();
+    setIsResetDialogOpen(false);
+    toast.success("Cart reset successfully");
   };
 
   const handleCheckout = async () => {
@@ -91,6 +99,7 @@ const CartPage = () => {
         address: selectedAddress,
       };
       const checkoutUrl = await createCheckoutSession(groupedItems, metadata);
+      console.log("checkoutUrl",checkoutUrl)
       if (checkoutUrl) {
         window.location.href = checkoutUrl;
       }
@@ -198,13 +207,37 @@ const CartPage = () => {
                         </div>
                       );
                     })}
-                    <Button
-                      onClick={handleResetCart}
-                      className="m-5 font-semibold"
-                      variant="destructive"
-                    >
-                      Reset Cart
-                    </Button>
+                     <Dialog open={isResetDialogOpen} onOpenChange={setIsResetDialogOpen}>
+            <DialogTrigger asChild>
+              <Button
+                className="mb-5 font-semibold"
+                variant="destructive"
+                size="lg"
+              >
+                Reset Cart
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Reset Cart</DialogTitle>
+                <DialogDescription>
+                  Are you sure you want to reset your cart? This action
+                  cannot be undone.
+                </DialogDescription>
+              </DialogHeader>
+              <DialogFooter className="flex justify-end gap-2">
+                <Button
+                  variant="outline"
+                  onClick={() => setIsResetDialogOpen(false)}
+                >
+                  Cancel
+                </Button>
+                <Button variant="destructive" onClick={confirmReset}>
+                  Yes, Reset
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
                   </div>
                 </div>
                 <div>

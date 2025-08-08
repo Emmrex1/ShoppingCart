@@ -13,21 +13,31 @@ import PriceFormatter from "./PriceFormatter";
 import AddToCartButton from "./AddToCartButton";
 import { toast } from "sonner";
 
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
+
 const WishListProducts = () => {
   const [visibleProducts, setVisibleProducts] = useState(7);
+  const [isResetDialogOpen, setIsResetDialogOpen] = useState(false);
   const { favoriteProduct, removeFromFavorite, resetFavorite } = useStore();
+
   const loadMore = () => {
-    setVisibleProducts((prev) => Math.min(prev + 5, favoriteProduct.length));
+    setVisibleProducts((prev) =>
+      Math.min(prev + 5, favoriteProduct.length)
+    );
   };
 
-  const handleResetWishlist = () => {
-    const confirmReset = window.confirm(
-      "Are you sure you want to reset your wishlist?"
-    );
-    if (confirmReset) {
-      resetFavorite();
-      toast.success("Wishlist reset successfully");
-    }
+  const confirmReset = () => {
+    resetFavorite();
+    setIsResetDialogOpen(false);
+    toast.success("Wishlist reset successfully");
   };
 
   return (
@@ -110,6 +120,7 @@ const WishListProducts = () => {
               </tbody>
             </table>
           </div>
+
           <div className="flex items-center gap-2">
             {visibleProducts < favoriteProduct?.length && (
               <div className="my-5">
@@ -129,16 +140,37 @@ const WishListProducts = () => {
               </div>
             )}
           </div>
-          {favoriteProduct?.length > 0 && (
-            <Button
-              onClick={handleResetWishlist}
-              className="mb-5 font-semibold"
-              variant="destructive"
-              size="lg"
-            >
-              Reset Wishlist
-            </Button>
-          )}
+          <Dialog open={isResetDialogOpen} onOpenChange={setIsResetDialogOpen}>
+            <DialogTrigger asChild>
+              <Button
+                className="mb-5 font-semibold"
+                variant="destructive"
+                size="lg"
+              >
+                Reset Wishlist
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Reset Wishlist</DialogTitle>
+                <DialogDescription>
+                  Are you sure you want to reset your wishlist? This action
+                  cannot be undone.
+                </DialogDescription>
+              </DialogHeader>
+              <DialogFooter className="flex justify-end gap-2">
+                <Button
+                  variant="outline"
+                  onClick={() => setIsResetDialogOpen(false)}
+                >
+                  Cancel
+                </Button>
+                <Button variant="destructive" onClick={confirmReset}>
+                  Yes, Reset
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </>
       ) : (
         <div className="flex min-h-[400px] flex-col items-center justify-center space-y-6 px-4 text-center">

@@ -1,6 +1,6 @@
 "use server";
 
-import stripe from "../lib/stripe"
+import stripe from "../lib/stripe";
 import { Address } from "@/sanity.types";
 import { urlFor } from "@/sanity/lib/image";
 import { CartItem } from "@/store";
@@ -31,14 +31,19 @@ export async function createCheckoutSession(
     });
     const customerId = customers?.data?.length > 0 ? customers.data[0].id : "";
 
+    // Build metadata object, omitting undefined values
+    const sessionMetadata: Record<string, string> = {
+      orderNumber: metadata.orderNumber,
+      customerName: metadata.customerName,
+      customerEmail: metadata.customerEmail,
+      address: JSON.stringify(metadata.address),
+    };
+    if (metadata.clerkUserId) {
+      sessionMetadata.clerkUserId = metadata.clerkUserId;
+    }
+
     const sessionPayload: Stripe.Checkout.SessionCreateParams = {
-      metadata: {
-        orderNumber: metadata.orderNumber,
-        customerName: metadata.customerName,
-        customerEmail: metadata.customerEmail,
-        clerkUserId: metadata.clerkUserId!,
-        address: JSON.stringify(metadata.address),
-      },
+      metadata: sessionMetadata,
       mode: "payment",
       allow_promotion_codes: true,
       payment_method_types: ["card"],
@@ -52,7 +57,7 @@ export async function createCheckoutSession(
       line_items: items?.map((item) => ({
         price_data: {
           currency: "USD",
-          unit_amount: Math.round(item?.product?.price! * 100),
+          unit_amount: Math.round(Number(item?.product?.price) * 100),
           product_data: {
             name: item?.product?.name || "Unknown Product",
             description: item?.product?.description,
@@ -60,7 +65,7 @@ export async function createCheckoutSession(
             images:
               item?.product?.images && item?.product?.images?.length > 0
                 ? [urlFor(item?.product?.images[0]).url()]
-                : undefined,
+                : [],
           },
         },
         quantity: item?.quantity,
