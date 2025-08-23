@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useRef, useEffect } from "react";
@@ -6,6 +5,7 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { logoutUser, getUser } from "@/service/authService";
 import { Button } from "./ui/button";
+import { UserIcon } from "lucide-react"; 
 
 const UserMenu = () => {
   const [user, setUser] = useState<any>(null);
@@ -21,15 +21,9 @@ const UserMenu = () => {
     };
     updateUser();
 
-    const handleAuthChange = () => {
-      updateUser();
-    };
-
+    const handleAuthChange = () => updateUser();
     window.addEventListener("authChange", handleAuthChange);
-
-    return () => {
-      window.removeEventListener("authChange", handleAuthChange);
-    };
+    return () => window.removeEventListener("authChange", handleAuthChange);
   }, []);
 
   useEffect(() => {
@@ -46,16 +40,17 @@ const UserMenu = () => {
 
   if (!user) {
     return (
-      <Link
-        href="/login"
-        className="px-4 py-2 bg-shop_light_green text-white rounded-md hover:bg-shop_dark_green transition text-sm"
+      <Button
+        asChild
+        className="flex items-center gap-2 bg-shop_light_green text-white rounded-md hover:bg-shop_dark_green transition text-sm px-4 py-2"
       >
-        Sign In
-      </Link>
+        <Link href="/login">
+          <UserIcon className="w-4 h-4 inline-block mr-1" /> Sign In
+        </Link>
+      </Button>
     );
   }
 
-  // Get first letter from name or email
   const getFirstLetter = () => {
     if (user.name) return user.name[0].toUpperCase();
     if (user.email) return user.email[0].toUpperCase();
@@ -66,7 +61,7 @@ const UserMenu = () => {
     <div className="relative" ref={menuRef}>
       <Button
         onClick={() => setOpen(!open)}
-        className="flex items-center gap-2 focus:outline-none avatar-container"
+        className="flex items-center gap-2 focus:outline-none bg-white  avatar-container"
       >
         {user.avatar ? (
           <img
@@ -91,9 +86,7 @@ const UserMenu = () => {
             className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 border border-gray-100 z-50"
           >
             <div className="px-4 py-2 border-b border-gray-100">
-              <p className="text-sm font-medium text-gray-900 truncate">
-                {user.name}
-              </p>
+              <p className="text-sm font-medium text-gray-900 truncate">{user.name}</p>
               <p className="text-xs text-gray-500 truncate">{user.email}</p>
             </div>
             <Link
