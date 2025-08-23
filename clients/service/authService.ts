@@ -146,3 +146,57 @@ export const getUserId = (): string | null => {
   }
 };
 
+// Fetch Profile
+export const getProfile = async (token: string) => {
+  const response = await axios.get(`${API_URL}/profile`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};
+
+// Update Profile
+export const updateProfile = async (
+  token: string,
+  profileData: { name?: string; email?: string }
+) => {
+  const response = await axios.put(`${API_URL}/profile`, profileData, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};
+
+// Change Password
+export const changePassword = async (
+  token: string,
+  currentPassword: string,
+  newPassword: string
+) => {
+  const response = await axios.post(
+    `${API_URL}/change-password`,
+    { currentPassword, newPassword },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+  return response.data;
+};
+
+// Deactivate Account
+export const deactivateAccount = async (token: string) => {
+  const response = await axios.patch(
+    `${API_URL}/deactivate`,
+    {},
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+  return response.data;
+};
+
+// Delete Account
+export const deleteAccount = async (token: string) => {
+  const response = await axios.delete(`${API_URL}/delete`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};
