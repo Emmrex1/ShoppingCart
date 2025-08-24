@@ -1,4 +1,4 @@
-
+// service/authService.ts
 import axios from "axios";
 
 const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5000";
@@ -27,7 +27,25 @@ export interface AuthResponse {
   };
 }
 
-// Helper function to dispatch auth change event
+// 🔹 Save token + user in localStorage
+export const saveAuthData = (token: string, user: any): void => {
+  if (typeof window === "undefined") return;
+
+  localStorage.setItem("token", token);
+  localStorage.setItem(
+    "user",
+    JSON.stringify({
+      userId: user.id || user.userId,
+      name: user.name,
+      email: user.email,
+      avatar: user.avatar || null,
+    })
+  );
+
+  dispatchAuthChange();
+};
+
+// 🔹 Dispatch "authChange" event
 const dispatchAuthChange = () => {
   if (typeof window !== "undefined") {
     window.dispatchEvent(new Event("authChange"));
@@ -42,22 +60,12 @@ export const registerUser = async (data: RegisterData): Promise<AuthResponse> =>
 
 // LOGIN
 export const loginUser = async (data: LoginData): Promise<AuthResponse> => {
-  const res = await axios.post<AuthResponse>(
-    `${API_URL}/api/auth/login`,
-    data,
-    { withCredentials: true }
-  );
+  const res = await axios.post<AuthResponse>(`${API_URL}/api/auth/login`, data, {
+    withCredentials: true,
+  });
 
   if (res.data?.accessToken && res.data.user) {
-    localStorage.setItem("token", res.data.accessToken);
-    localStorage.setItem("user", JSON.stringify({
-      userId: res.data.user.id,
-      name: res.data.user.name,
-      email: res.data.user.email,
-      avatar: res.data.user.avatar || null
-    }));
-    
-    dispatchAuthChange();
+    saveAuthData(res.data.accessToken, res.data.user);
   }
 
   return res.data;
@@ -71,7 +79,9 @@ export const forgotPassword = async (email: string) => {
 
 // RESET PASSWORD
 export const resetPassword = async (token: string, newPassword: string) => {
-  const res = await axios.post(`${API_URL}/api/auth/reset-password/${token}`, { newPassword });
+  const res = await axios.post(`${API_URL}/api/auth/reset-password/${token}`, {
+    newPassword,
+  });
   return res.data;
 };
 
@@ -89,24 +99,24 @@ export const getToken = (): string | null => {
 };
 
 // GET USER
-export const getUser = (): { 
-  userId: string; 
-  name: string; 
-  email: string; 
-  avatar?: string | null 
+export const getUser = (): {
+  userId: string;
+  name: string;
+  email: string;
+  avatar?: string | null;
 } | null => {
   if (typeof window === "undefined") return null;
-  
+
   const userJson = localStorage.getItem("user");
   if (!userJson) return null;
-  
+
   try {
     const user = JSON.parse(userJson);
     return {
       userId: user.userId || "",
       name: user.name || "",
       email: user.email || "",
-      avatar: user.avatar || null
+      avatar: user.avatar || null,
     };
   } catch (error) {
     console.error("Failed to parse user data:", error);
@@ -122,7 +132,9 @@ export const verifyEmail = async (token: string) => {
 
 // RESEND VERIFICATION EMAIL
 export const resendVerificationEmail = async (email: string) => {
-  const res = await axios.post(`${API_URL}/api/auth/resend-verification`, { email });
+  const res = await axios.post(`${API_URL}/api/auth/resend-verification`, {
+    email,
+  });
   return res.data;
 };
 
@@ -132,12 +144,11 @@ export const isAuthenticated = (): boolean => {
 };
 
 // Get user ID
-// SIMPLIFIED USER GETTER
 export const getUserId = (): string | null => {
   if (typeof window === "undefined") return null;
   const userData = localStorage.getItem("user");
   if (!userData) return null;
-  
+
   try {
     const user = JSON.parse(userData);
     return user.userId || user.id || null;
@@ -146,7 +157,7 @@ export const getUserId = (): string | null => {
   }
 };
 
-// Fetch Profile
+// PROFILE ENDPOINTS
 export const getProfile = async (token: string) => {
   const response = await axios.get(`${API_URL}/profile`, {
     headers: { Authorization: `Bearer ${token}` },
@@ -154,7 +165,6 @@ export const getProfile = async (token: string) => {
   return response.data;
 };
 
-// Update Profile
 export const updateProfile = async (
   token: string,
   profileData: { name?: string; email?: string }
@@ -165,7 +175,6 @@ export const updateProfile = async (
   return response.data;
 };
 
-// Change Password
 export const changePassword = async (
   token: string,
   currentPassword: string,
@@ -181,7 +190,6 @@ export const changePassword = async (
   return response.data;
 };
 
-// Deactivate Account
 export const deactivateAccount = async (token: string) => {
   const response = await axios.patch(
     `${API_URL}/deactivate`,
@@ -193,7 +201,6 @@ export const deactivateAccount = async (token: string) => {
   return response.data;
 };
 
-// Delete Account
 export const deleteAccount = async (token: string) => {
   const response = await axios.delete(`${API_URL}/delete`, {
     headers: { Authorization: `Bearer ${token}` },
