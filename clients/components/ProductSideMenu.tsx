@@ -17,8 +17,8 @@ const ProductSideMenu = ({ product, className }: ProductSideMenuProps) => {
   const [isFavorited, setIsFavorited] = useState(false);
 
   useEffect(() => {
-    // ✅ Always resolve to a boolean, never undefined
-    const exists = favoriteProduct?.some((item) => item._id === product._id) ?? false;
+    const exists =
+      favoriteProduct?.some((item) => item._id === product._id) ?? false;
     setIsFavorited(exists);
   }, [product, favoriteProduct]);
 
@@ -33,7 +33,7 @@ const ProductSideMenu = ({ product, className }: ProductSideMenuProps) => {
           ? "Product removed from favorites!"
           : "Product added to favorites!"
       );
-    } catch (err) {
+    } catch (err: unknown) {
       toast.error("Something went wrong. Try again.");
     }
   };
