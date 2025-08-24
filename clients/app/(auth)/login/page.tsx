@@ -12,6 +12,7 @@ import { FaGoogle } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { AxiosError } from "axios";
 
 // Zod schema
 const schema = z.object({
@@ -21,6 +22,10 @@ const schema = z.object({
 });
 
 type LoginForm = z.infer<typeof schema>;
+
+interface LoginResponse {
+  token: string;
+}
 
 export default function LoginPage() {
   const router = useRouter();
@@ -41,7 +46,7 @@ export default function LoginPage() {
   const onSubmit = async (data: LoginForm) => {
     setLoading(true);
     try {
-      const res = await loginUser({
+      const res: LoginResponse = await loginUser({
         email: data.email,
         password: data.password,
         remember: data.remember,
@@ -57,25 +62,25 @@ export default function LoginPage() {
 
       toast.success("Login successful!");
       router.push("/");
-    } catch (err: any) {
+    } catch (error) {
+      const err = error as AxiosError<{ message?: string }>;
       toast.error(err.response?.data?.message || "Login failed");
     } finally {
       setLoading(false);
     }
   };
 
-const handleGoogleLogin = () => {
-  window.location.href = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/oauth/google-auth`;
-};
+  const handleGoogleLogin = () => {
+    window.location.href = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/oauth/google-auth`;
+  };
 
-const handleGithubLogin = () => {
-  window.location.href = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/oauth/github-auth`;
-};
+  const handleGithubLogin = () => {
+    window.location.href = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/oauth/github-auth`;
+  };
 
-const handleFacebookLogin = () => {
-  window.location.href = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/oauth/facebook-auth`;
-};
-
+  const handleFacebookLogin = () => {
+    window.location.href = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/oauth/facebook-auth`;
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-purple-50 to-indigo-100">
@@ -158,7 +163,7 @@ const handleFacebookLogin = () => {
         {/* Divider */}
         <div className="flex items-center my-6">
           <hr className="flex-grow border-gray-300" />
-           <span className="mx-2 text-gray-500 text-sm">or sign up with</span>
+          <span className="mx-2 text-gray-500 text-sm">or sign up with</span>
           <hr className="flex-grow border-gray-300" />
         </div>
 
