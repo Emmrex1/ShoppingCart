@@ -9,7 +9,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { loginUser } from "@/service/authService";
 import { Eye, EyeOff, Mail, Lock, Github, Facebook } from "lucide-react";
 import { FaGoogle } from "react-icons/fa";
-import { useForm } from "react-hook-form";
+import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { AxiosError } from "axios";
@@ -32,7 +32,7 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  // React Hook Form with Zod
+  // ✅ Explicit type added here
   const {
     register,
     handleSubmit,
@@ -42,8 +42,8 @@ export default function LoginPage() {
     resolver: zodResolver(schema),
   });
 
-  // Normal login
-  const onSubmit = async (data: LoginForm) => {
+  // ✅ Explicit SubmitHandler type instead of `any`
+  const onSubmit: SubmitHandler<LoginForm> = async (data) => {
     setLoading(true);
     try {
       const res: LoginResponse = await loginUser({
