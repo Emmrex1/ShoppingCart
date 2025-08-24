@@ -1,17 +1,11 @@
+// components/ChangePasswordModal.tsx
 "use client";
 
 import React, { useState } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-
 import { Loader2 } from "lucide-react";
 import { changePassword, getToken } from "@/service/authService";
 
@@ -20,15 +14,12 @@ interface ChangePasswordModalProps {
   onOpenChange: (open: boolean) => void;
 }
 
-const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
-  open,
-  onOpenChange,
-}) => {
+const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ open, onOpenChange }) => {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!currentPassword || !newPassword) {
       return toast.error("Please fill in all fields");
@@ -38,14 +29,14 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
     try {
       const token = getToken();
       if (!token) throw new Error("Not authenticated");
-
       await changePassword(token, currentPassword, newPassword);
       toast.success("Password changed successfully!");
       setCurrentPassword("");
       setNewPassword("");
       onOpenChange(false);
-    } catch (err: any) {
-      toast.error(err?.response?.data?.message || "Failed to change password");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Failed to change password";
+      toast.error(message);
     } finally {
       setLoading(false);
     }
@@ -77,8 +68,7 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
             <Button type="submit" disabled={loading}>
               {loading ? (
                 <>
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  Updating...
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" /> Updating...
                 </>
               ) : (
                 "Update Password"

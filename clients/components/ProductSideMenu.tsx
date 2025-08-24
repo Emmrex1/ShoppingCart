@@ -1,3 +1,4 @@
+// components/ProductSideMenu.tsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -17,23 +18,16 @@ const ProductSideMenu = ({ product, className }: ProductSideMenuProps) => {
   const [isFavorited, setIsFavorited] = useState(false);
 
   useEffect(() => {
-    const exists =
-      favoriteProduct?.some((item) => item._id === product._id) ?? false;
+    const exists = favoriteProduct?.some((item) => item._id === product._id) ?? false;
     setIsFavorited(exists);
   }, [product, favoriteProduct]);
 
-  const handleFavorite = async (
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>
-  ) => {
+  const handleFavorite = async (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     e.preventDefault();
     try {
       await addToFavorite(product);
-      toast.success(
-        isFavorited
-          ? "Product removed from favorites!"
-          : "Product added to favorites!"
-      );
-    } catch (err: unknown) {
+      toast.success(isFavorited ? "Product removed from favorites!" : "Product added to favorites!");
+    } catch {
       toast.error("Something went wrong. Try again.");
     }
   };
@@ -44,9 +38,7 @@ const ProductSideMenu = ({ product, className }: ProductSideMenuProps) => {
         onClick={handleFavorite}
         className={cn(
           "p-2.5 rounded-full transition-colors hover:bg-shop_dark_green/80 hover:text-white",
-          isFavorited
-            ? "bg-shop_dark_green/80 text-white"
-            : "bg-lightColor/10 text-black"
+          isFavorited ? "bg-shop_dark_green/80 text-white" : "bg-lightColor/10 text-black"
         )}
         role="button"
         aria-label="Toggle favorite"

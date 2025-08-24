@@ -1,10 +1,12 @@
+// components/CategoryProducts.tsx
 "use client";
+
 import { Category, Product } from "@/sanity.types";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { client } from "@/sanity/lib/client";
-import { AnimatePresence, motion } from "framer-motion"; // ← fixed package name
+import { AnimatePresence, motion } from "framer-motion";
 import { Loader2 } from "lucide-react";
 import NoProductAvailable from "./NoProductAvailable";
 import ProductCard from "./ProductCard";
@@ -46,7 +48,7 @@ const CategoryProducts = ({ categories, slug }: Props) => {
 
   useEffect(() => {
     fetchProducts(currentSlug);
-  }, [router]);
+  }, [currentSlug]); // ✅ fixed dependency
 
   return (
     <div className="flex flex-col md:flex-row gap-8 py-6">
@@ -57,13 +59,9 @@ const CategoryProducts = ({ categories, slug }: Props) => {
           return (
             <Button
               key={item?._id}
-              onClick={() => handleCategoryChange(item?.slug?.current!)}
+              onClick={() => item?.slug?.current && handleCategoryChange(item.slug.current)}
               className={`w-full justify-start px-4 py-3 text-left rounded-none font-semibold capitalize text-sm transition-colors duration-200
-                ${
-                  isActive
-                    ? "bg-shop_orange text-white"
-                    : "hover:bg-gray-100 text-gray-800"
-                }`}
+                ${isActive ? "bg-shop_orange text-white" : "hover:bg-gray-100 text-gray-800"}`}
               variant="ghost"
             >
               {item?.title}
