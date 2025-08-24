@@ -7,7 +7,6 @@ import { cn } from "@/lib/utils";
 import { Product } from "@/sanity.types";
 import useStore from "@/store";
 
-
 interface ProductSideMenuProps {
   product: Product;
   className?: string;
@@ -18,7 +17,8 @@ const ProductSideMenu = ({ product, className }: ProductSideMenuProps) => {
   const [isFavorited, setIsFavorited] = useState(false);
 
   useEffect(() => {
-    const exists = favoriteProduct?.some((item) => item._id === product._id);
+    // ✅ Always resolve to a boolean, never undefined
+    const exists = favoriteProduct?.some((item) => item._id === product._id) ?? false;
     setIsFavorited(exists);
   }, [product, favoriteProduct]);
 

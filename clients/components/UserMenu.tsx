@@ -5,27 +5,38 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { logoutUser, getUser } from "@/service/authService";
 import { Button } from "./ui/button";
-import { UserIcon } from "lucide-react"; 
+import { UserIcon } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 const UserMenu = () => {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
 
+  // ✅ Only run auth logic on client
   useEffect(() => {
     const updateUser = () => {
-      const userData = getUser();
-      setUser(userData);
-      setLoading(false);
+      try {
+        const userData = getUser(); // safe on client
+        setUser(userData);
+      } catch (e) {
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
     };
+
     updateUser();
 
     const handleAuthChange = () => updateUser();
     window.addEventListener("authChange", handleAuthChange);
+
     return () => window.removeEventListener("authChange", handleAuthChange);
   }, []);
 
+  // ✅ Close menu on outside click
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
@@ -35,6 +46,21 @@ const UserMenu = () => {
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, []);
+
+  // ✅ Close menu when navigating to a new page
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
+
+  // ✅ Close on Escape key
+  useEffect(() => {
+    if (!open) return;
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("keydown", handleKey);
+    return () => document.removeEventListener("keydown", handleKey);
+  }, [open]);
 
   if (loading) return null;
 
@@ -60,8 +86,11 @@ const UserMenu = () => {
   return (
     <div className="relative" ref={menuRef}>
       <Button
-        onClick={() => setOpen(!open)}
-        className="flex items-center gap-2 focus:outline-none bg-white  avatar-container"
+        onClick={() => setOpen((prev) => !prev)}
+        className="flex items-center gap-2 focus:outline-none bg-white avatar-container"
+        aria-haspopup="menu"
+        aria-expanded={open}
+        aria-label="User menu"
       >
         {user.avatar ? (
           <img
@@ -83,15 +112,20 @@ const UserMenu = () => {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: -5 }}
             transition={{ duration: 0.15, ease: "easeInOut" }}
+            role="menu"
+            aria-label="User options"
             className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 border border-gray-100 z-50"
           >
             <div className="px-4 py-2 border-b border-gray-100">
-              <p className="text-sm font-medium text-gray-900 truncate">{user.name}</p>
+              <p className="text-sm font-medium text-gray-900 truncate">
+                {user.name}
+              </p>
               <p className="text-xs text-gray-500 truncate">{user.email}</p>
             </div>
             <Link
               href="/orders"
               className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              role="menuitem"
               onClick={() => setOpen(false)}
             >
               Orders
@@ -99,6 +133,7 @@ const UserMenu = () => {
             <Link
               href="/profile"
               className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              role="menuitem"
               onClick={() => setOpen(false)}
             >
               Profile
@@ -106,6 +141,7 @@ const UserMenu = () => {
             <Link
               href="/wishlist"
               className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              role="menuitem"
               onClick={() => setOpen(false)}
             >
               Wishlist
@@ -115,6 +151,7 @@ const UserMenu = () => {
                 logoutUser();
                 setOpen(false);
               }}
+              role="menuitem"
               className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
             >
               Logout
