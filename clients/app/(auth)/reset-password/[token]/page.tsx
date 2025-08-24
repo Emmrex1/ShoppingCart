@@ -8,9 +8,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { resetPassword } from "@/service/authService";
 import { Eye, EyeOff } from "lucide-react";
+import { AxiosError } from "axios";
 
 export default function ResetPasswordPage() {
-  const { token } = useParams();
+  const { token } = useParams<{ token: string }>();
   const router = useRouter();
 
   const [password, setPassword] = useState("");
@@ -32,11 +33,12 @@ export default function ResetPasswordPage() {
 
     try {
       setLoading(true);
-      await resetPassword(token as string, password);
+      await resetPassword(token, password);
       toast.success("Password reset successful. Please log in.");
       router.push("/login");
-    } catch (err: any) {
-      toast.error(err.response?.data?.message || "Reset password failed");
+    } catch (error: unknown) {
+      const err = error as AxiosError<{ message?: string }>;
+      toast.error(err.response?.data?.message ?? "Reset password failed");
     } finally {
       setLoading(false);
     }

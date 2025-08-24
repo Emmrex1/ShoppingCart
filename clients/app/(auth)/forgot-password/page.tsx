@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { forgotPassword } from "@/service/authService";
 import { Loader2 } from "lucide-react";
+import { AxiosError } from "axios";
 
 export default function ForgotPasswordPage() {
   const router = useRouter();
@@ -21,8 +22,9 @@ export default function ForgotPasswordPage() {
       await forgotPassword(email);
       toast.success("Password reset link sent to your email!");
       router.push("/login");
-    } catch (err: any) {
-      toast.error(err.response?.data?.message || "Failed to send reset link");
+    } catch (error: unknown) {
+      const err = error as AxiosError<{ message?: string }>;
+      toast.error(err.response?.data?.message ?? "Failed to send reset link");
     } finally {
       setLoading(false);
     }
