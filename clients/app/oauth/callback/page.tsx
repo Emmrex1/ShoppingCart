@@ -12,10 +12,10 @@ type DecodedUser = {
   avatar?: string | null;
 };
 
-export default function OAuthCallbackPage() {
+export default function OAuthCallbackHandler() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [step, setStep] = useState(1); 
+  const [step, setStep] = useState(1);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
@@ -23,7 +23,7 @@ export default function OAuthCallbackPage() {
     const error = searchParams.get("error");
 
     if (token) {
-      setStep(2); 
+      setStep(2);
       localStorage.setItem("token", token);
 
       try {
@@ -36,7 +36,7 @@ export default function OAuthCallbackPage() {
       window.dispatchEvent(new Event("authChange"));
 
       setTimeout(() => {
-        setStep(3); 
+        setStep(3);
         router.replace("/");
       }, 1500);
     } else if (error) {
@@ -46,11 +46,7 @@ export default function OAuthCallbackPage() {
     }
   }, [router, searchParams]);
 
-  const steps = [
-    "Personal Info",
-    "Account Info",
-    "Verify Email",
-  ];
+  const steps = ["Personal Info", "Account Info", "Verify Email"];
 
   return (
     <div className="flex flex-col h-screen items-center justify-center bg-gray-50 px-4">
@@ -70,7 +66,7 @@ export default function OAuthCallbackPage() {
         </div>
         <div className="w-full bg-gray-200 rounded-full h-2">
           <div
-            className={`h-2 rounded-full bg-blue-500 transition-all duration-700`}
+            className="h-2 rounded-full bg-blue-500 transition-all duration-700"
             style={{ width: `${(step / steps.length) * 100}%` }}
           />
         </div>
