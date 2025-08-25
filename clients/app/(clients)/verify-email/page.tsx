@@ -21,13 +21,18 @@ const VerifyEmailPage = () => {
           return;
         }
 
+        // ✅ Debug logs only in development
+        if (process.env.NODE_ENV === "development") {
+          console.log("🔍 API URL:", process.env.NEXT_PUBLIC_API_URL);
+          console.log("🔍 Token:", token);
+        }
+
         const res = await axios.post(
           `${process.env.NEXT_PUBLIC_API_URL}/auth/verify-email`,
           { token }
         );
 
         if (res.data?.accessToken) {
-          // ✅ use accessToken consistently
           saveAuthData(res.data.accessToken, res.data.user);
           setStatus("success");
 
