@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image"; // ✅ use Next.js Image
 
 interface UserProfile {
   id: string;
@@ -31,11 +32,15 @@ export default function ProfilePage() {
       <h1 className="text-2xl font-bold mb-4">Your Profile</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <img
-            src={profile.avatarUrl}
-            alt="Avatar"
-            className="w-20 h-20 rounded-full mb-4"
-          />
+          {profile.avatarUrl && (
+            <Image
+              src={profile.avatarUrl}
+              alt="Avatar"
+              width={80}
+              height={80}
+              className="w-20 h-20 rounded-full mb-4 object-cover"
+            />
+          )}
         </div>
         <div>
           <label className="block text-sm font-medium">Name</label>

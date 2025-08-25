@@ -9,8 +9,9 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { registerUser } from "@/service/authService";
-import { Eye, EyeOff, Github, Facebook, Mail } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react"; // ✅ removed unused icons
 import { motion } from "framer-motion";
+import { AxiosError } from "axios";
 
 const registerSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -40,8 +41,9 @@ export default function RegisterPage() {
     try {
       await registerUser(data);
       setEmailSent(true);
-    } catch (error: any) {
-      toast.error(error?.response?.data?.message || "Registration failed");
+    } catch (error) {
+      const err = error as AxiosError<{ message?: string }>;
+      toast.error(err.response?.data?.message || "Registration failed");
     } finally {
       setLoading(false);
     }

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import Image from "next/image"; // ✅ use Next.js Image
 
 interface CartItem {
   id: string;
@@ -39,10 +40,12 @@ export default function CartPage() {
               className="flex justify-between items-center border p-4 rounded-md"
             >
               <div className="flex items-center space-x-4">
-                <img
+                <Image
                   src={item.imageUrl}
                   alt={item.name}
-                  className="w-16 h-16 object-cover rounded-md"
+                  width={64}
+                  height={64}
+                  className="rounded-md object-cover"
                 />
                 <div>
                   <p className="font-semibold">{item.name}</p>

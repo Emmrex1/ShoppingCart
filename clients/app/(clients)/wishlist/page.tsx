@@ -5,27 +5,31 @@ import WishListProducts from "@/components/WishListProducts";
 import React, { useEffect, useState } from "react";
 import { getUser } from "@/service/authService";
 
+interface User {
+  id: string;
+  email: string;
+  name?: string;
+}
+
 const WishListPage = () => {
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null); // ✅ no more `any`
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check auth on client side
-    const userData = getUser();
+    const userData = getUser() as User | null;
     setUser(userData);
     setLoading(false);
-    
-    // Listen for auth changes
+
     const handleAuthChange = () => {
-      setUser(getUser());
+      setUser(getUser() as User | null);
     };
-    
+
     window.addEventListener("authChange", handleAuthChange);
     return () => window.removeEventListener("authChange", handleAuthChange);
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>; 
+    return <div>Loading...</div>;
   }
 
   return (
