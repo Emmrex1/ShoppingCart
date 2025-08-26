@@ -396,6 +396,7 @@ const handleUserRegister = async (req, res) => {
       success: true,
       message: "Registration successful! Please check your email to verify your account.",
     });
+    // console.log("Registration successful for:", email)
   } catch (error) {
     console.error("Registration failed:", error);
     res.status(500).send({ success: false, message: "Registration failed" });

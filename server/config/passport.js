@@ -13,11 +13,10 @@ const {
   FACEBOOK_CLIENT_SECRET,
 } = process.env;
 
-// Auto-detect environment and set BACKEND_URL
 const isProduction = process.env.NODE_ENV === "production";
 
 const BACKEND_URL = isProduction
-  ? "https://shoppingcart-7l4t.onrender.com" 
+  ? "https://shoppingcarts.onrender.com" 
   : "http://localhost:5000"; 
 
 export default function setupPassport() {
