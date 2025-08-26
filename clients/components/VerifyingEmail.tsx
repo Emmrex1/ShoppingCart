@@ -23,7 +23,7 @@ export default function VerifyEmailContent() {
         await axios.post("/api/auth/verify-email", { token });
         setStatus("success");
         toast.success("Email verified successfully!");
-      } catch (error) {
+      } catch {
         setStatus("error");
         toast.error("Invalid or expired verification link.");
       }
