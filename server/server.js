@@ -12,7 +12,7 @@ import authRouter from "./routes/authRoutes.js";
 
 
 const app = express();
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || 5000;
 const isProduction = process.env.NODE_ENV === "production";
 
 // Middleware
@@ -54,7 +54,7 @@ connectDB().catch((err) => {
 app.use("/api/auth", userRouter); 
 app.use("/api/oauth", authRouter); 
 
-// Test route
+// T
 app.get("/", (req, res) => {
   res.send("API connected Successfully");
 });

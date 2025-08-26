@@ -364,7 +364,7 @@ const handleUserRegister = async (req, res) => {
       return res.json({ success: false, message: "User already exists" });
     }
 
-    // Create new user with isVerified: false
+    // Create new user with isVerified: 
     const user = new userModel({
       email,
       password,
