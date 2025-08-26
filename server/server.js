@@ -23,8 +23,8 @@ app.use(passport.initialize());
 setupPassport(); 
 
 const allowedOrigins = [
-  "https://shoppingcart-taupe-one.vercel.app",
-  "https://shoppingcart-taupe-one.vercel.app",
+  "https://shoppingcarts-ten.vercel.app",
+  "https://shoppingcarts-ten.vercel.app",
 ];
 
 app.use(
