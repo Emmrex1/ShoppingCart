@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import axios from "axios";
 import { toast } from "sonner";
+import { verifyEmail } from "@/service/authService";
 
 export default function VerifyEmailContent() {
   const searchParams = useSearchParams();
@@ -13,23 +13,23 @@ export default function VerifyEmailContent() {
   );
 
   useEffect(() => {
-    const verifyEmail = async () => {
+    const verify = async () => {
       if (!token) {
         setStatus("error");
         return;
       }
 
       try {
-        await axios.post("/api/auth/verify-email", { token });
+        await verifyEmail(token); 
         setStatus("success");
         toast.success("Email verified successfully!");
-      } catch {
+      } catch (err) {
         setStatus("error");
         toast.error("Invalid or expired verification link.");
       }
     };
 
-    verifyEmail();
+    verify();
   }, [token]);
 
   return (
