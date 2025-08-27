@@ -25,14 +25,12 @@ const Header = () => {
           <Logo />
         </div>
 
-        {/* Middle: Desktop Navigation */}
         <div className="hidden md:flex flex-1 justify-center">
           <HeaderMenu />
         </div>
 
-        {/* Right: Actions */}
         <div className="flex items-center gap-2 md:gap-4">
-          {/* Searchbar hidden on small screens */}
+
           <div className="hidden md:block">
             <Searchbar />
           </div>
