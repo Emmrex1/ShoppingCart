@@ -16,7 +16,6 @@ const ProductGrid = () => {
   const [loading, setLoading] = useState(false);
   const [selectedTab, setSelectedTab] = useState(productType[0]?.title || "");
 
-  // Memoize query and params so they don’t trigger unnecessary re-renders
   const query = useMemo(
     () => `*[_type == "product" && variant == $variant] | order(name asc){
       ...,"categories": categories[]->title
@@ -43,11 +42,12 @@ const ProductGrid = () => {
     };
 
     fetchData();
-  }, [query, params]); // ✅ dependencies fixed
+  }, [query, params]);
 
   return (
     <Container className="flex flex-col lg:px-0 my-10">
       <HomeTab selectedTab={selectedTab} onTabSelect={setSelectedTab} />
+
       {loading ? (
         <div className="flex flex-col items-center justify-center py-10 min-h-80 space-y-4 text-center bg-gray-100 rounded-lg w-full mt-10">
           <motion.div className="flex items-center space-x-2 text-blue-600">
@@ -56,7 +56,18 @@ const ProductGrid = () => {
           </motion.div>
         </div>
       ) : products?.length ? (
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2.5 mt-10">
+        <div
+          className="
+            grid 
+            grid-cols-2         
+            sm:grid-cols-2     
+            md:grid-cols-3     
+            lg:grid-cols-4      
+            xl:grid-cols-5      
+            gap-4 sm:gap-5 lg:gap-6  
+            mt-10
+          "
+        >
           {products.map((product) => (
             <AnimatePresence key={product?._id}>
               <motion.div

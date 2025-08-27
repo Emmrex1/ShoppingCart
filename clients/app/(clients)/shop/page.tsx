@@ -1,6 +1,7 @@
 import { getAllBrands, getCategories } from "@/sanity/queries";
 import React, { Suspense } from "react";
 import Shop from "@/components/Shop";
+import { FaSpinner } from "react-icons/fa";
 
 const ShopPage = async () => {
   const categories = await getCategories();
@@ -8,8 +9,7 @@ const ShopPage = async () => {
 
   return (
     <div className="bg-white">
-      {/* ✅ Wrap Shop (client component w/ useSearchParams) inside Suspense */}
-      <Suspense fallback={<p>Loading shop...</p>}>
+      <Suspense fallback={ <FaSpinner className="animate-spin text-blue-500 text-3xl mb-4" />}>
         <Shop categories={categories} brands={brands} />
       </Suspense>
     </div>

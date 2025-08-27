@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { loginUser } from "@/service/authService";
 import { Eye, EyeOff, Mail, Lock, Github, Facebook } from "lucide-react";
-import { FaGoogle } from "react-icons/fa";
+import { FaGoogle, FaSpinner } from "react-icons/fa";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -156,7 +156,7 @@ export default function LoginPage() {
             disabled={loading}
             className="w-full bg-blue-600 hover:bg-blue-700"
           >
-            {loading ? "Logging in..." : "Login"}
+            {loading ? <FaSpinner/> : "Login"}
           </Button>
         </form>
 

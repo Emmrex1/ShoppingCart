@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { resetPassword } from "@/service/authService";
 import { Eye, EyeOff } from "lucide-react";
 import { AxiosError } from "axios";
+import { FaSpinner } from "react-icons/fa";
 
 export default function ResetPasswordPage() {
   const { token } = useParams<{ token: string }>();
@@ -94,7 +95,7 @@ export default function ResetPasswordPage() {
         </div>
 
         <Button type="submit" className="w-full" disabled={loading}>
-          {loading ? "Resetting..." : "Reset Password"}
+          {loading ? <FaSpinner/> : "Reset Password"}
         </Button>
       </form>
     </div>

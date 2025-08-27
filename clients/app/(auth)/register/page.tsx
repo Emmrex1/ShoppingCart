@@ -12,6 +12,7 @@ import { registerUser } from "@/service/authService";
 import { Eye, EyeOff } from "lucide-react"; // ✅ removed unused icons
 import { motion } from "framer-motion";
 import { AxiosError } from "axios";
+import { FaSpinner } from "react-icons/fa";
 
 const registerSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -148,7 +149,7 @@ export default function RegisterPage() {
             </div>
 
             <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700" disabled={loading}>
-              {loading ? "Registering..." : "Register"}
+              {loading ? <FaSpinner/> : "Register"}
             </Button>
           </form>
 

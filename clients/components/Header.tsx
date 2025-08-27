@@ -19,7 +19,7 @@ const Header = () => {
         {/* Left: Logo + Mobile Menu */}
         <div className="flex items-center gap-3 md:gap-5">
           {/* Mobile menu button only on small screens */}
-          <div className="md:hidden">
+          <div className="md:hidden mt-2">
             <MobileMenu />
           </div>
           <Logo />

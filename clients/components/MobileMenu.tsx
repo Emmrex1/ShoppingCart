@@ -1,5 +1,5 @@
 "use client";
-import { AlignLeft } from "lucide-react";
+import { GiHamburgerMenu } from "react-icons/gi";
 import React, { useState } from "react";
 import dynamic from "next/dynamic";
 
@@ -15,7 +15,7 @@ const MobileMenu = () => {
         className="md:hidden hover:text-darkColor transition-colors focus:outline-none"
         aria-label="Open menu"
       >
-        <AlignLeft size={24} className="md:hidden" />
+        <GiHamburgerMenu size={24} className="md:hidden" />
       </button>
       <SideMenu isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
     </>
